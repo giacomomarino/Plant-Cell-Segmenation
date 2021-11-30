@@ -7,6 +7,11 @@ from tensorflow.keras.optimizers import *
 class Segmentor(tf.keras.Model):
     def __init__(self):
         super(Segmentor, self).__init__()
+        #hyperparams
+        self.batch_size = 128
+        self.alpha = 0.001
+        self.optimizer = Adam(learning_rate=alpha)
+
         self.conv_down1 = Sequential([Conv2D(64, 3, activation='relu', padding='same', kernel_initializer='he_normal'),
                                       Conv2D(64, 3, activation='relu', padding='same', kernel_initializer='he_normal'),
                                       MaxPooling2D(pool_size=(2, 2))])
