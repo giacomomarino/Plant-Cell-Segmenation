@@ -8,6 +8,7 @@ class Segmentor(tf.keras.Model):
 	def __init__(self):
 
 		super(Segmentor, self).__init__()
+
 		inputs = Input(input_size)
         conv1 = Conv2D(64, 3, activation='relu', padding='same', kernel_initializer='he_normal')(inputs)
         conv1 = Conv2D(64, 3, activation='relu', padding='same', kernel_initializer='he_normal')(conv1)
