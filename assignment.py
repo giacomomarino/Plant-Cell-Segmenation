@@ -2,6 +2,7 @@ import os
 import numpy as np
 import tensorflow as tf
 import numpy as np
+from model import Segmentor
 from preprocess import *
 import sys
 import random
@@ -32,6 +33,8 @@ def main():
 	print("Running preprocessing...")
 	train_data, train_labels, test_data, test_data = get_data(train_files, test_files)
 	print("Preprocessing complete.")
+	model = Segmentor()
+
 	train(model, train_data)
 	loss, accuracy = test(model, test_data)
 
