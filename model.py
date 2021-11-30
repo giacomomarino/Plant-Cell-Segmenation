@@ -6,8 +6,7 @@ from tensorflow.keras.layers import *
 from tensorflow.keras.optimizers import *
 
 class Segmentor(tf.keras.Model):
-    def model_maker(input_size):
-        inputs = Input(input_size)
+    self.network = tf.keras.Sequential([
         conv1 = Conv2D(64, 3, activation='relu', padding='same', kernel_initializer='he_normal')(inputs)
         conv1 = Conv2D(64, 3, activation='relu', padding='same', kernel_initializer='he_normal')(conv1)
         pool1 = MaxPooling2D(pool_size=(2, 2))(conv1)
