@@ -36,10 +36,12 @@ class Segmentor(tf.keras.Model):
     def call(self, inputs):
         down1 = self.conv_down1(inputs)
         down2 = self.conv_down2(down1)
+        print("down2 layer done!")
         bottom = self.bottom(down2)
         bottom_concat = concatenate([down2, bottom], axis=3)
         up1 = self.conv_up1(bottom_concat)
         up1_concat = concatenate([down1, up1], axis=3)
+        print("up1 concat layer done!")
         up2 = self.conv_up2(up1_concat)
         return up2
 
