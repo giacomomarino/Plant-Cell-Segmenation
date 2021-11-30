@@ -31,12 +31,18 @@ def test(model, test_input, test_labels):
 
 def main():
 	print("Running preprocessing...")
-	train_data, train_labels, test_data, test_data = get_data(train_files, test_files)
+	train_data, train_labels, test_data, test_labels = get_data(train_files[0:2], test_files[0:2])
 	print("Preprocessing complete.")
-	model = Segmentor()
 
-	train(model, train_data)
-	loss, accuracy = test(model, test_data)
+	
+	model = Segmentor()
+	print("Created SEGMENTOR")	
+
+	print("Training")
+	train(model, train_data, train_labels)
+	print("Testing")
+	loss = test(model, test_data, test_labels)
+	print("Loss: " + loss)
 
 if __name__ == '__main__':
 	main()
