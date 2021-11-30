@@ -28,7 +28,7 @@ class Segmentor(tf.keras.Model):
                                     UpSampling2D(size=(2, 2))])
         self.conv_up2 = Sequential([Conv2D(64, 3, activation='relu', padding='same', kernel_initializer='he_normal'),
                                     Conv2D(64, 3, activation='relu', padding='same', kernel_initializer='he_normal'),
-                                    Conv2D(2, 3, activation='relu', padding='same', kernel_initializer='he_normal')(conv5)
+                                    Conv2D(2, 3, activation='relu', padding='same', kernel_initializer='he_normal'),
                                     Conv2D(1, 1, activation='sigmoid')])
 
     @tf.function
