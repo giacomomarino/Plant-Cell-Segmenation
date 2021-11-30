@@ -2,7 +2,7 @@ import os
 import numpy as np
 import tensorflow as tf
 import numpy as np
-from model import Segmentor
+from segmentor import *
 from preprocess import *
 import sys
 import random
