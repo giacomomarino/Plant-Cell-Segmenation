@@ -12,8 +12,8 @@ def train(model, train_input, train_labels):
 		inputs = train_input[i:i+model.batch_size]
 		labels = train_labels[i:i+model.batch_size]
 		with tf.GradientTape() as tape:
-			probs = model.call(inputs)
-			loss = model.loss_function(probs, labels)
+			logits = model.call(inputs)
+			loss = model.loss_function(logits, labels)
 		gradients = tape.gradient(loss, model.trainable_variables)
 		model.optimizer.apply_gradients(zip(gradients, model.trainable_variables))
 
@@ -22,8 +22,8 @@ def test(model, test_input, test_labels):
 	for i in range(0, len(test_input), model.batch_size):
 		inputs = test_input[i:i+model.batch_size]
 		labels = test_labels[i:i+model.batch_size]
-		probs = model.call(inputs)
-		losses += model.loss_function(probs, label)
+		logits = model.call(inputs)
+		losses += model.loss_function(logits, labels)
 	#calculate accuracy
 
 	#currently returns total losses
