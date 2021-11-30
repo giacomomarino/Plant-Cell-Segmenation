@@ -47,8 +47,7 @@ class Segmentor(tf.keras.Model):
         pass
 
 
-    def loss_function(self):
-
-
-        return pass
+    def loss_function(self, logits, labels):
+        loss = tf.keras.losses.BinaryCrossentropy(logits=logits, labels=labels, from_logits=True)
+        return loss
 
