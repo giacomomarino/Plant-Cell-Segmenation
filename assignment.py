@@ -8,9 +8,27 @@ from rnn_model import RNN_Seq2Seq
 import sys
 import random
 
-def train(model):
+def train(model, train_input, train_labels):
+	for i in range(0, len(train_input), model.batch_size):
+		inputs = train_input[i:i+model.batch_size]
+		labels = train_labels[i:i+model.batch_size]
+		with tf.GradientTape() as tape:
+			probs = model.call(inputs)
+			loss = model.loss_function(probs, labels)
+		gradients = tape.gradient(loss, model.trainable_variables)
+		model.optimizer.apply_gradients(zip(gradients, model.trainable_variables))
 
-	pass
+def test(model, test_input, test_labels):
+	losses = 0
+	for i in range(0, len(test_input), model.batch_size):
+		inputs = test_input[i:i+model.batch_size]
+		labels = test_labels[i:i+model.batch_size]
+		probs = model.call(inputs)
+		losses += model.loss_function(probs, label)
+	#calculate accuracy
+
+	#currently returns total losses
+	return losses
 
 def main():
 	print("Running preprocessing...")
