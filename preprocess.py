@@ -31,16 +31,20 @@ test_files = ['test/Movie1_t00006_crop_gt.h5',
 
 def get_data(train_files: list, test_files: list):
 
+    train_data = []
+    train_labels = []
     for train_file in train_files:
         f = h5py.File(train_file, 'r')
-        train_labels = (f['label'])
-        train_data = list(f['raw'])
+        train_labels = train_labels + list(f['label'])
+        train_data = train_data + list(f['raw'])
         max = np.max(f['raw'])
 
+    test_data = []
+    test_labels = []
     for test_file in test_files:
-        f = h5py.File(train_file, 'r')
-        test_labels = list(f['label'])
-        test_data = list(f['raw'])
+        f = h5py.File(test_file, 'r')
+        test_labels = test_labels + list(f['label'])
+        test_data = test_data + list(f['raw'])
 
     train_data = np.array(train_data) / max
     train_labels = np.array(train_labels)
