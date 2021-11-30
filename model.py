@@ -6,6 +6,9 @@ from tensorflow.keras.layers import *
 from tensorflow.keras.optimizers import *
 
 class Segmentor(tf.keras.Model):
+    def __init__(self):
+        super(Segmentor, self).__init__()
+
     def model_maker(input_size):
         inputs = Input(input_size)
         conv1 = Conv2D(64, 3, activation='relu', padding='same', kernel_initializer='he_normal')(inputs)
@@ -46,8 +49,8 @@ class Segmentor(tf.keras.Model):
         model = Model(input=inputs, output=conv7)
         model.compile(optimizer=Adam(lr=1e-4), loss='binary_crossentropy', metrics=['accuracy'])
 
-    return model
+        return model
 
-    def call(model, inputs):
+    def call(self, inputs):
 
 
