@@ -10,7 +10,7 @@ class Segmentor(tf.keras.Model):
         #hyperparams
         self.batch_size = 128
         self.alpha = 0.001
-        self.optimizer = Adam(learning_rate=alpha)
+        self.optimizer = Adam(learning_rate=self.alpha)
 
         self.conv_down1 = Sequential([Conv2D(64, 3, activation='relu', padding='same', kernel_initializer='he_normal'),
                                       Conv2D(64, 3, activation='relu', padding='same', kernel_initializer='he_normal'),
