@@ -8,6 +8,7 @@ from tensorflow.keras.optimizers import *
 class Segmentor(tf.keras.Model):
     def __init__(self):
         super(Segmentor, self).__init__()
+        print("model inited")
         self.conv_down1 = Sequential([Conv2D(64, 3, activation='relu', padding='same', kernel_initializer='he_normal'),
                                       Conv2D(64, 3, activation='relu', padding='same', kernel_initializer='he_normal'),
                                       MaxPooling2D(pool_size=(2, 2))])
@@ -29,10 +30,12 @@ class Segmentor(tf.keras.Model):
 
     def call(self, inputs):
         down1 = self.conv_down1(inputs)
+        print("layer 1 DONE")
         down2 = self.conv_down2(down1)
         bottom = self.bottom(down2)
         bottom_concat = concatenate([down2, bottom], axis=3)
         up1 = self.conv_up1(bottom_concat)
+        print("layer like 4 or smth DONE")
         up1_concat = concatenate([down1, up1], axis=3)
         up2 = self.conv_up2(up1_concat)
         return up2
