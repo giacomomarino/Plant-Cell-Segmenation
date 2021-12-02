@@ -9,45 +9,63 @@ class Segmentor(tf.keras.Model):
     def __init__(self):
         super(Segmentor, self).__init__()
         # hyperparams
-        self.batch_size = 128
+        self.batch_size = 4
         self.alpha = 0.001
         self.optimizer = Adam(learning_rate=self.alpha)
+        self.hd = 16
 
-        self.conv_down1 = Sequential([Conv2D(64, 3, activation='relu', padding='same', kernel_initializer='he_normal'),
-                                      Conv2D(64, 3, activation='relu', padding='same', kernel_initializer='he_normal'),
-                                      MaxPooling2D(pool_size=(2, 2))])
-        self.conv_down2 = Sequential([Conv2D(128, 3, activation='relu', padding='same', kernel_initializer='he_normal'),
-                                      Conv2D(128, 3, activation='relu', padding='same', kernel_initializer='he_normal'),
-                                      Dropout(0.5),
-                                      MaxPooling2D(pool_size=(2, 2))])
-        self.bottom = Sequential([Conv2D(256, 3, activation='relu', padding='same', kernel_initializer='he_normal'),
-                                  Conv2D(256, 3, activation='relu', padding='same', kernel_initializer='he_normal'),
-                                  UpSampling2D(size=(2, 2))])
+        self.conv_down1 = Sequential([Conv2D(self.hd * 1, 3, activation='relu', padding='same', kernel_initializer='he_normal'),
+                                      Conv2D(self.hd * 1, 3, activation='relu', padding='same', kernel_initializer='he_normal')])
+                                      #MaxPooling2D(pool_size=(2, 2))])
+        self.mp1 = MaxPooling2D(pool_size=(2, 2))
+        self.conv_down2 = Sequential([Conv2D(self.hd * 2, 3, activation='relu', padding='same', kernel_initializer='he_normal'),
+                                      Conv2D(self.hd * 3, 3, activation='relu', padding='same', kernel_initializer='he_normal'),
+                                      Dropout(0.5)])
+                                      #MaxPooling2D(pool_size=(2, 2))])
+        self.mp2 = MaxPooling2D(pool_size=(5, 5))
+        self.bottom = Sequential([Conv2D(self.hd * 4, 3, activation='relu', padding='same', kernel_initializer='he_normal'),
+                                  Conv2D(self.hd * 4, 3, activation='relu', padding='same', kernel_initializer='he_normal'),
+                                  UpSampling2D(size=(5, 5))])
         # this net needs to concat w/ bottom output and down2 output
-        self.conv_up1 = Sequential([Conv2D(128, 3, activation='relu', padding='same', kernel_initializer='he_normal'),
-                                    Conv2D(128, 3, activation='relu', padding='same', kernel_initializer='he_normal'),
+        self.conv_up1 = Sequential([Conv2D(self.hd * 2, 3, activation='relu', padding='same', kernel_initializer='he_normal'),
+                                    Conv2D(self.hd * 2, 3, activation='relu', padding='same', kernel_initializer='he_normal'),
                                     UpSampling2D(size=(2, 2))])
-        self.conv_up2 = Sequential([Conv2D(64, 3, activation='relu', padding='same', kernel_initializer='he_normal'),
-                                    Conv2D(64, 3, activation='relu', padding='same', kernel_initializer='he_normal'),
-                                    Conv2D(2, 3, activation='relu', padding='same', kernel_initializer='he_normal'),
-                                    Conv2D(1, 1, activation='sigmoid')])
+        self.conv_up2 = Sequential([Conv2D(self.hd * 1, 3, activation='relu', padding='same', kernel_initializer='he_normal'),
+                                    Conv2D(self.hd * 1, 3, activation='relu', padding='same', kernel_initializer='he_normal'),
+                                    Conv2D(1, 1, activation='sigmoid', padding='same', kernel_initializer='he_normal')])
+                                    #Conv2D(2, 3, activation='relu', padding='same', kernel_initializer='he_normal'),
+                                    #Conv2D(1, 1, activation='sigmoid')])
 
     @tf.function
     def call(self, inputs):
+        print('inputs in call', inputs)
+        inputs = tf.expand_dims(inputs, 3)
+        print("inputs shape be", inputs.shape, inputs)
         down1 = self.conv_down1(inputs)
-        down2 = self.conv_down2(down1)
-        print("down2 layer done!")
-        bottom = self.bottom(down2)
-        bottom_concat = concatenate([down2, bottom], axis=3)
+        print("down1 layer done!", down1.shape)
+        downpool1 = self.mp1(down1)
+        down2 = self.conv_down2(downpool1)
+        print("down2 layer done!", down2.shape)
+        downpool2 = self.mp2(down2)
+        bottom = self.bottom(downpool2)
+        print("bottom layer done!", bottom.shape)
+        bottom_concat = concatenate([bottom, down2], axis=3)
+        print("bottom concated,", bottom_concat.shape)
         up1 = self.conv_up1(bottom_concat)
         up1_concat = concatenate([down1, up1], axis=3)
         print("up1 concat layer done!")
         up2 = self.conv_up2(up1_concat)
+        print("up2 layer done!", up2)
+
         return up2
+        pass
 
     def accuracy_function(self):
         pass
 
+    @tf.function
     def loss_function(self, logits, labels):
-        loss = tf.keras.losses.BinaryCrossentropy(logits=logits, labels=labels, from_logits=True)
+        bce = tf.keras.losses.BinaryCrossentropy(from_logits=True)
+        print("loss layer inited")
+        loss = bce(labels, logits)
         return loss
