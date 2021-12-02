@@ -32,32 +32,41 @@ test_files = ['test/Movie1_t00006_crop_gt.h5',
 
 def get_data(train_files: list, test_files: list):
 
-    train_data = []
-    train_labels = []
+
+    first = True
     for train_file in tqdm(train_files):
-        f = h5py.File(train_file, 'r')
-        print(f)
-        train_labels = train_labels + list(f['label'])
-        train_data = train_data + list(f['raw'])
-        max = np.max(f['raw'])
+        if first:
+            f = h5py.File(train_file, 'r')
+            norm_data = np.divide(np.array(f['raw']), np.max(f['raw']))
+            train_labels = np.array(f['label'])
+            train_data = norm_data
+            first = False
+        else:
+            f = h5py.File(train_file, 'r')
+            norm_data = np.divide(np.array(f['raw']), np.max(f['raw']))
+            np.append(train_labels, np.array(f['label']))
+            np.append(train_data, norm_data)
 
-    test_data = []
-    test_labels = []
+
+    first = True
     for test_file in tqdm(test_files):
-        g = h5py.File(test_file, 'r')
-        print(g)
-        test_labels = test_labels + list(g['label'])
-        test_data = test_data + list(g['raw'])
+        if first:
+            g = h5py.File(test_file, 'r')
+            test_data = np.divide(np.array(g['raw']), np.max(g['raw']))
+            test_labels = np.array(g['label'])
+            first = False
+        else:
+            g = h5py.File(test_file, 'r')
+            norm_data = np.divide(np.array(g['raw']), np.max(g['raw']))
+            np.append(test_labels, np.array(g['label']))
+            np.append(test_data, norm_data)
 
-    train_data = np.array(train_data) / max
-    train_labels = np.array(train_labels)
-
-    test_data = np.array(test_data) / max
-    test_labels = np.array(test_labels)
-
-    print(' train_data shape', train_data.shape)
-    print(' train_labels shape', train_labels.shape)
-    print(' test_data shape', test_data.shape)
-    print(' test_labels shape', test_labels.shape)
+    print(' train_data shape', np.shape(train_data))
+    print(' train_labels shape', np.shape(train_labels))
+    print(' test_data shape', np.shape(test_data))
+    print(' test_labels shape', np.shape(test_labels))
 
     return train_data, train_labels, test_data, test_labels
+
+
+get_data(train_files[0:2], test_files[0:2])
