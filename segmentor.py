@@ -38,9 +38,9 @@ class Segmentor(tf.keras.Model):
 
     @tf.function
     def call(self, inputs):
-        print('inputs in call', inputs)
+        #print('inputs in call', inputs)
         inputs = tf.expand_dims(inputs, 3)
-        print("inputs shape be", inputs.shape, inputs)
+        #print("inputs shape be", inputs.shape, inputs)
         down1 = self.conv_down1(inputs)
         print("down1 layer done!", down1.shape)
         downpool1 = self.mp1(down1)
@@ -48,14 +48,14 @@ class Segmentor(tf.keras.Model):
         print("down2 layer done!", down2.shape)
         downpool2 = self.mp2(down2)
         bottom = self.bottom(downpool2)
-        print("bottom layer done!", bottom.shape)
+        #print("bottom layer done!", bottom.shape)
         bottom_concat = concatenate([bottom, down2], axis=3)
-        print("bottom concated,", bottom_concat.shape)
+        #print("bottom concated,", bottom_concat.shape)
         up1 = self.conv_up1(bottom_concat)
         up1_concat = concatenate([down1, up1], axis=3)
         print("up1 concat layer done!")
         up2 = self.conv_up2(up1_concat)
-        print("up2 layer done!", up2)
+        #print("up2 layer done!", up2)
 
         return up2
         pass
@@ -69,3 +69,4 @@ class Segmentor(tf.keras.Model):
         print("loss layer inited")
         loss = bce(labels, logits)
         return loss
+
