@@ -39,7 +39,7 @@ def train(model, train_input, train_labels):
         labels = tf.cast(tf.constant(train_labels[i:i + model.batch_size]), dtype=tf.float32)
         # print("data has been batched", inputs, labels)
         with tf.GradientTape() as tape:
-            print('inputs', inputs)
+            #print('inputs', inputs)
             logits = model.call(inputs)
             # print("logits done for round", i, logits)
             loss = model.loss_function(logits, labels)
@@ -59,17 +59,23 @@ def test(model, test_input, test_labels):
     print("test in", test_input.shape)
     print("test labels", test_labels.shape)
     logs = []
+    accs = []
     for i in tqdm(range(0, len(test_input), model.batch_size)):
+
         print("i")
-        print(range(0, len(test_input), model.batch_size))
+        #print(range(0, len(test_input), model.batch_size))
+
         inputs = tf.cast(tf.constant(test_input[i:i + model.batch_size]), dtype=tf.float32)
         inps = []
+
         for i in range(inputs.shape[0]):
             inps.append(tf.expand_dims(inputs[i], axis=2))
+    
         display(inps)
         labels = tf.cast(tf.constant(test_labels[i:i + model.batch_size]), dtype=tf.float32)
         logits = model.call(inputs)
         losses += model.loss_function(logits, labels)
+        accs.append(model.accuracy_function(labels, logits, 0.5))
         for i in range(logits.shape[0]):
             logs.append(logits[i])
         # calculate accuracy
@@ -77,12 +83,12 @@ def test(model, test_input, test_labels):
     display(logs)
 
     # currently returns total losses
-    return losses
+    return losses, accs
 
 
 def main():
     print("Running preprocessing...")
-    train_data, train_labels, test_data, test_labels = get_data(train_files[0:2], test_files[0:2])
+    train_data, train_labels, test_data, test_labels = get_data(train_files[0:2], test_files[0:2], 1)
     print("Preprocessing complete.")
 
     print(' train_data shape', train_data.shape)
@@ -95,8 +101,9 @@ def main():
     print("Training")
     train(model, train_data, train_labels)
     print("Testing")
-    loss = test(model, test_data, test_labels)
+    loss, accs = test(model, test_data, test_labels)
     print("SEGMENTOR HAS SEGMENTORED: Loss: ", loss)
+    print(accs)
 
 
 if __name__ == '__main__':

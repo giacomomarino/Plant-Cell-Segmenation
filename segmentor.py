@@ -3,6 +3,10 @@ import numpy as np
 from tensorflow.keras.models import *
 from tensorflow.keras.layers import *
 from tensorflow.keras.optimizers import *
+import scipy as sc
+from tensorflow.keras.preprocessing import image
+from sklearn.metrics import precision_score, recall_score
+
 
 
 class Segmentor(tf.keras.Model):
@@ -58,15 +62,44 @@ class Segmentor(tf.keras.Model):
         #print("up2 layer done!", up2)
 
         return up2
-        pass
 
-    def accuracy_function(self):
-        pass
+
+
+    @tf.function
+    def accuracy_function(self, label, pred, threshold):
+
+        if label.shape != pred.shape:
+            pred = tf.reshape(pred, label.shape)
+
+        thresh = tf.constant(threshold, dtype=tf.dtypes.float32)
+
+        # binarize predictions
+
+        binarized = tf.math.greater(pred, thresh)
+            
+        # Measure accuracy
+        mask = tf.cast(tf.boolean_mask(binarized, label), dtype=tf.int32)
+        accuracy = tf.reduce_mean(tf.boolean_mask(tf.equal(tf.cast(binarized, dtype=tf.dtypes.int32), tf.cast(label, dtype=tf.dtypes.int32)), mask))
+
+            # Measure scores
+        precision = precision_score(tf.reshape(label, -1), tf.reshape(binarized, -1))
+        recall = recall_score(tf.reshape(label, -1), tf.reshape(binarized, -1))
+        f1 = 2 * ((precision * recall) / (precision + recall))
+
+
+        return {f"threshold: {threshold:0.2f},"
+        f" accuracy: {accuracy:0.3f},"
+        f" f1 score: {f1:0.3f},"
+        f" precision: {precision:0.3f},"
+        f" recall: {recall:0.3f}"}
+
+        
 
     @tf.function
     def loss_function(self, logits, labels):
         bce = tf.keras.losses.BinaryCrossentropy(from_logits=True)
         print("loss layer inited")
         loss = bce(labels, logits)
-        return loss
+
+        return tf.reduce_mean(loss)
 
