@@ -77,9 +77,17 @@ class Segmentor(tf.keras.Model):
         # binarize predictions
 
         binarized = tf.math.greater(pred, thresh)
-            
+        print("pred mat")
+        print(binarized)
+
+        print("labels")
+        print(label)
+
         # Measure accuraced
         correct = tf.equal(binarized, tf.cast(thresh, dtype=tf.dtypes.bool))
+        print("correct matrix")
+        print(correct)
+
 
         accuracy = tf.reduce_mean(tf.cast(correct, tf.dtypes.float32))
 
@@ -90,9 +98,6 @@ class Segmentor(tf.keras.Model):
 
 
         return accuracy
-       # f" f1 score: {f1:0.3f},"
-       # f" precision: {precision:0.3f},"
-        #f" recall: {recall:0.3f}"}
 
         
 

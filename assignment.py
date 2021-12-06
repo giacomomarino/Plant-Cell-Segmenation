@@ -73,15 +73,20 @@ def test(model, test_input, test_labels):
     
         #display(inps)
         labels = tf.cast(tf.constant(test_labels[i:i + model.batch_size]), dtype=tf.float32)
+        
+        if inputs.shape[0] != labels.shape[0]:
+            print("batch misalignment skipping")
+            break
+
         logits = model.call(inputs)
         losses += model.loss_function(logits, labels)
-        
+
         for i in range(logits.shape[0]):
             logs.append(logits[i])
-            print(model.accuracy_function(labels[i], logits[i], .5))
+            accs.append(model.accuracy_function(labels[i], logits[i], .5))
         # calculate accuracy
-    print("here da logs", len(logs), logs[0], logs)
-    display(logs)
+    #print("here da logs", len(logs), logs[0], logs)
+    #display(logs)
 
     # currently returns total losses
     return losses, accs
@@ -104,7 +109,7 @@ def main():
     print("Testing")
     loss, accs = test(model, test_data, test_labels)
     print("SEGMENTOR HAS SEGMENTORED: Loss: ", loss)
-    print(accs)
+    print(tf.reduce_mean(accs))
 
 
 if __name__ == '__main__':
