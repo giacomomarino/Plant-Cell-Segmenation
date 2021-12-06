@@ -1,3 +1,4 @@
+from time import thread_time
 import tensorflow as tf
 import numpy as np
 from tensorflow.keras.models import *
@@ -77,21 +78,21 @@ class Segmentor(tf.keras.Model):
 
         binarized = tf.math.greater(pred, thresh)
             
-        # Measure accuracy
-        mask = tf.cast(tf.boolean_mask(binarized, label), dtype=tf.int32)
-        accuracy = tf.reduce_mean(tf.boolean_mask(tf.equal(tf.cast(binarized, dtype=tf.dtypes.int32), tf.cast(label, dtype=tf.dtypes.int32)), mask))
+        # Measure accuraced
+        correct = tf.equal(binarized, tf.cast(thresh, dtype=tf.dtypes.bool))
+
+        accuracy = tf.reduce_mean(tf.cast(correct, tf.dtypes.float32))
 
             # Measure scores
-        precision = precision_score(tf.reshape(label, -1), tf.reshape(binarized, -1))
-        recall = recall_score(tf.reshape(label, -1), tf.reshape(binarized, -1))
-        f1 = 2 * ((precision * recall) / (precision + recall))
+        #precision = precision_score(tf.reshape(label, [-1]), tf.reshape(binarized, [-1]))
+        #recall = recall_score(tf.reshape(label, [-1]), tf.reshape(binarized, [-1]))
+        #f1 = 2 * ((precision * recall) / (precision + recall))
 
 
-        return {f"threshold: {threshold:0.2f},"
-        f" accuracy: {accuracy:0.3f},"
-        f" f1 score: {f1:0.3f},"
-        f" precision: {precision:0.3f},"
-        f" recall: {recall:0.3f}"}
+        return accuracy
+       # f" f1 score: {f1:0.3f},"
+       # f" precision: {precision:0.3f},"
+        #f" recall: {recall:0.3f}"}
 
         
 

@@ -71,13 +71,14 @@ def test(model, test_input, test_labels):
         for i in range(inputs.shape[0]):
             inps.append(tf.expand_dims(inputs[i], axis=2))
     
-        display(inps)
+        #display(inps)
         labels = tf.cast(tf.constant(test_labels[i:i + model.batch_size]), dtype=tf.float32)
         logits = model.call(inputs)
         losses += model.loss_function(logits, labels)
-        accs.append(model.accuracy_function(labels, logits, 0.5))
+        
         for i in range(logits.shape[0]):
             logs.append(logits[i])
+            print(model.accuracy_function(labels[i], logits[i], .5))
         # calculate accuracy
     print("here da logs", len(logs), logs[0], logs)
     display(logs)
