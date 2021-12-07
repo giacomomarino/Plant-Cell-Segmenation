@@ -76,7 +76,7 @@ class Segmentor(tf.keras.Model):
 
         # binarize predictions
 
-        binarized = tf.math.greater(pred, thresh)
+        binarized = tf.math.less_equal(pred, thresh)
         print("pred mat")
         print(binarized)
 
@@ -84,7 +84,7 @@ class Segmentor(tf.keras.Model):
         print(label)
 
         # Measure accuraced
-        correct = tf.equal(binarized, tf.cast(thresh, dtype=tf.dtypes.bool))
+        correct = tf.equal(binarized, tf.cast(label, dtype=tf.dtypes.bool))
         print("correct matrix")
         print(correct)
 
@@ -95,12 +95,9 @@ class Segmentor(tf.keras.Model):
         #precision = precision_score(tf.reshape(label, [-1]), tf.reshape(binarized, [-1]))
         #recall = recall_score(tf.reshape(label, [-1]), tf.reshape(binarized, [-1]))
         #f1 = 2 * ((precision * recall) / (precision + recall))
-
-
         return accuracy
 
         
-
     @tf.function
     def loss_function(self, logits, labels):
         bce = tf.keras.losses.BinaryCrossentropy(from_logits=True)
