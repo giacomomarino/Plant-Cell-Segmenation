@@ -32,10 +32,15 @@ def train(model, train_input, train_labels):
                 print('partitioning')
                 parted =[]
                 for k in range(logits.shape[0]):
-                    parted.append(partitioner(logits[k]))
-                print(parted)
+                    part = tf.expand_dims(partitioner(logits[k]),0)
+                    part = tf.cast(part, dtype=tf.float32)
+                    parted.append(part)
+                #print(parted)
+                preds = tf.concat(parted,0)
+                print(preds)
                 # print("logits done for round", i, logits)
-                loss = model.loss_function(parted, labels)
+                loss = model.loss_function(preds, labels)
+                print('loss worked!')
             gradients = tape.gradient(loss, model.trainable_variables)
             model.optimizer.apply_gradients(zip(gradients, model.trainable_variables))
             #print("gimme display")
