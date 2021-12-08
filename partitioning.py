@@ -1,4 +1,4 @@
-#https://stackoverflow.com/questions/29573126/image-boundary-finding-and-filling
+# https://stackoverflow.com/questions/29573126/image-boundary-finding-and-filling
 from scipy import ndimage
 
 import numpy as np
@@ -7,27 +7,28 @@ import matplotlib.pyplot as plt
 import skimage
 
 
-
 def display(display_list):
-  plt.figure(figsize=(15, 15))
+    plt.figure(figsize=(15, 15))
 
-  title = ['Input Image', 'True Mask', 'Predicted Mask']
+    title = ['Input Image', 'True Mask', 'Predicted Mask']
 
-  for i in range(len(display_list)):
-    plt.subplot(1, len(display_list), i+1)
-    plt.title(title[i])
-    plt.imshow(tf.keras.preprocessing.image.array_to_img(display_list[i]))
-    plt.axis('off')
-  plt.show()
+    for i in range(len(display_list)):
+        plt.subplot(1, len(display_list), i + 1)
+        #plt.title(title[i])
+        plt.imshow(tf.keras.preprocessing.image.array_to_img(display_list[i]))
+        plt.axis('off')
+    plt.show()
+
 
 def partitioner(preds):
-# Read the image, convert the values to True or False;
-# discard all but the red channel (since it's a black and
-# white image, they're all the same)
-    image = np.where(preds.numpy() > 0.5, 1, 0)
+    # Read the image, convert the values to True or False;
+    # discard all but the red channel (since it's a black and
+    # white image, they're all the same)
+    image = np.squeeze(np.where(preds.numpy() > 0.5, 1, 0))
+    print(image.shape, image)
 
-# Compute connected regions in the image; we're going to use this
-# to find centroids for our watershed segmentation
+    # Compute connected regions in the image; we're going to use this
+    # to find centroids for our watershed segmentation
     labels = skimage.measure.label(image)
     regions = skimage.measure.regionprops(labels)
 
@@ -35,7 +36,7 @@ def partitioner(preds):
     # be the centroids of the different connected regions in the image
     markers = np.array([r.centroid for r in regions]).astype(np.uint16)
     marker_image = np.zeros_like(image, dtype=np.int64)
-    marker_image[markers[:, 0], markers[:, 1]]  = np.arange(len(markers)) + 1
+    marker_image[markers[:, 0], markers[:, 1]] = np.arange(len(markers)) + 1
 
     # Compute the distance map, which provides a "landscape" for our watershed
     # segmentation
@@ -66,11 +67,11 @@ def partitioner(preds):
     ax2.imshow(distance_map, cmap='gray')
     plt.show()
     return filled_filtered
-    
 
-d = tf.random.uniform(shape=[100,100])
-#plt.imshow(d)
-#plt.show()
-#print(d)
-#display([tf.expand_dims(d,axis=2)])
-#partitioner(d)
+
+d = tf.random.uniform(shape=[100, 100])
+# plt.imshow(d)
+# plt.show()
+# print(d)
+# display([tf.expand_dims(d,axis=2)])
+# partitioner(d)

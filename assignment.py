@@ -30,7 +30,10 @@ def train(model, train_input, train_labels):
                 logits = model.call(inputs)
                 #display([logits])
                 print('partitioning')
-                logits = partitioner(logits)
+                parted =[]
+                for k in range(logits.shape[0]):
+                    parted.append(partitioner(logits[k]))
+                print(parted)
                 # print("logits done for round", i, logits)
                 loss = model.loss_function(logits, labels)
             gradients = tape.gradient(loss, model.trainable_variables)
