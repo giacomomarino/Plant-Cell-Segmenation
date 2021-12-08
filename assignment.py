@@ -95,7 +95,7 @@ def test(model, test_input, test_labels):
         #print("here da logs", len(logs), logs[0], logs)
 
         # currently returns total losses
-        return losses, accs
+    return losses, accs
 
 
 def main():
