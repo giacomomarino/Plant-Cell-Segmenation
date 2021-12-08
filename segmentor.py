@@ -5,6 +5,7 @@ from tensorflow.keras.layers import *
 from tensorflow.keras.optimizers import *
 import scipy as sc
 from tensorflow.keras.preprocessing import image
+from partitioning import *
 
 
 
@@ -39,7 +40,6 @@ class Segmentor(tf.keras.Model):
                                     #Conv2D(2, 3, activation='relu', padding='same', kernel_initializer='he_normal'),
                                     #Conv2D(1, 1, activation='sigmoid')])
 
-    @tf.function
     def call(self, inputs):
         #print('inputs in call', inputs)
         inputs = tf.expand_dims(inputs, 3)
@@ -58,8 +58,17 @@ class Segmentor(tf.keras.Model):
         up1_concat = concatenate([down1, up1], axis=3)
         #print("up1 concat layer done!")
         up2 = self.conv_up2(up1_concat)
-        #print("up2 layer done!", up2)
-        print('done call, returning')
+        print("up2 layer done!", up2)
+
+        '''
+        parted =[]
+        for k in range(up2.shape[0]):
+            part = tf.expand_dims(partitioner(up2[k]),0)
+            part = tf.cast(part, dtype=tf.float32)
+            parted.append(part)
+        #print(parted)
+        preds = tf.concat(parted,0)
+        print('done call, returning')'''
         return up2
 
 
@@ -90,7 +99,7 @@ class Segmentor(tf.keras.Model):
         
     @tf.function
     def loss_function(self, logits, labels):
-        bce = tf.keras.losses.BinaryCrossentropy(from_logits=True)
+        bce = tf.keras.losses.BinaryCrossentropy()
         #print("loss layer inited")
         loss = bce(labels, logits)
 

@@ -24,7 +24,7 @@ def partitioner(preds):
     # Read the image, convert the values to True or False;
     # discard all but the red channel (since it's a black and
     # white image, they're all the same)
-    image = np.squeeze(np.where(preds.numpy() > 0.5, 1, 0))
+    image = np.squeeze(np.where(np.array(preds) > 0.5, 1, 0))
     print(image.shape, image)
 
     # Compute connected regions in the image; we're going to use this

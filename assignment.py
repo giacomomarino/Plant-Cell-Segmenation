@@ -27,18 +27,7 @@ def train(model, train_input, train_labels):
 
             with tf.GradientTape() as tape:
                 print('running call')
-                logits = model.call(inputs)
-                #display([logits])
-                print('partitioning')
-                parted =[]
-                for k in range(logits.shape[0]):
-                    part = tf.expand_dims(partitioner(logits[k]),0)
-                    part = tf.cast(part, dtype=tf.float32)
-                    parted.append(part)
-                #print(parted)
-                preds = tf.concat(parted,0)
-                print(preds)
-                # print("logits done for round", i, logits)
+                preds = model.call(inputs)
                 loss = model.loss_function(preds, labels)
                 print('loss worked!')
             gradients = tape.gradient(loss, model.trainable_variables)
