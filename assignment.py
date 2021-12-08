@@ -11,6 +11,7 @@ import matplotlib.pyplot as plt
 from PIL import Image
 from tensorflow.keras.utils import *
 from tensorflow.keras.preprocessing.image import *
+from partitioning import *
 
 
 def display(display_list):

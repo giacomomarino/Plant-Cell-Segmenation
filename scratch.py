@@ -18,8 +18,11 @@ def display(display_list):
     plt.imshow(tf.keras.preprocessing.image.array_to_img(display_list[i]))
     plt.axis('off')
   plt.show()
-
-
+  
+d = tf.random.uniform([10,10]).numpy()
+n = np.where(d > 0.5, 1, 0)
+print(n, d)
+'''
 a = tf.ones([4, 550, 1000,1])
 print(a)
 a = tf.expand_dims(a, axis=0)
@@ -30,4 +33,4 @@ for i in range(a.shape[0]):
 
 #print(logs)
 display(logs)
-
+'''
