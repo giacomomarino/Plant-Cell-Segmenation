@@ -36,7 +36,7 @@ def train(model, train_input, train_labels):
         train_movie = train_input[j]
         train_label = train_labels[j]
         
-        for i in tqdm(range(0, len(train_input), model.batch_size)):
+        for i in tqdm(range(0, len(train_movie), model.batch_size)):
             #print("starting train now in loop")
             inputs = tf.cast(tf.constant(train_movie[i:i + model.batch_size]), dtype=tf.float32)
             labels = tf.cast(tf.constant(train_label[i:i + model.batch_size]), dtype=tf.float32)
@@ -66,7 +66,7 @@ def test(model, test_input, test_labels):
     for j in range(len(test_input)):
         test_movie = test_input[j]
         test_label = test_labels[j]
-        for i in tqdm(range(0, len(test_input), model.batch_size)):
+        for i in tqdm(range(0, len(test_movie), model.batch_size)):
 
             #print("i")
             #print(range(0, len(test_input), model.batch_size))
