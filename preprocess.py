@@ -32,43 +32,26 @@ test_files = ['test/Movie1_t00006_crop_gt.h5',
 'test/Movie2_T00020_crop_gt.h5']
 
 
-def blur_image(boundary, sigma):
-    '''image = sc.ndimage.gaussian_filter(boundary, sigma=sigma)
-    image[image >= 0.5] = 1
-    image[image < 0.5] = 0
-    return image'''
-    return boundary
+def get_data(train_files: list, test_files: list):
 
-def get_data(train_files: list, test_files: list, sigma: float):
-
-
-    first = True
+    train_labels = []
+    train_data = []
     for train_file in tqdm(train_files):
-        if first:
-            f = h5py.File(train_file, 'r')
-            norm_data = np.divide(np.array(f['raw']), np.max(f['raw']))
-            train_labels = blur_image(np.array(f['label']), sigma)
-            train_data = norm_data
-            first = False
-        else:
-            f = h5py.File(train_file, 'r')
-            norm_data = np.divide(np.array(f['raw']), np.max(f['raw']))
-            np.append(train_labels, blur_image(np.array(f['label']), sigma))
-            np.append(train_data, norm_data)
+        f = h5py.File(train_file, 'r')
+        norm_data = np.divide(np.array(f['raw']), np.max(f['raw']))
+        train_label = np.array(f['label'])
+        train_labels.append(train_label)
+        train_data.append(norm_data)
 
 
-    first = True
+    test_labels = []
+    test_data = []
     for test_file in tqdm(test_files):
-        if first:
-            g = h5py.File(test_file, 'r')
-            test_data = np.divide(np.array(g['raw']), np.max(g['raw']))
-            test_labels = blur_image(np.array(g['label']), sigma)
-            first = False
-        else:
-            g = h5py.File(test_file, 'r')
-            norm_data = np.divide(np.array(g['raw']), np.max(g['raw']))
-            np.append(test_labels, blur_image(np.array(g['label']), sigma))
-            np.append(test_data, norm_data)
+        g = h5py.File(test_file, 'r')
+        norm_data = np.divide(np.array(g['raw']), np.max(g['raw']))
+        label = np.array(g['label'])
+        test_labels.append(label)
+        test_data.append(norm_data)
 
     print(' train_data shape', np.shape(train_data))
     print(' train_labels shape', np.shape(train_labels))
@@ -78,4 +61,4 @@ def get_data(train_files: list, test_files: list, sigma: float):
     return train_data, train_labels, test_data, test_labels
 
 
-#get_data(train_files[0:2], test_files[0:2])
+#train_data, train_labels, test_data, test_labels = get_data(train_files[0:2], test_files[0:2])

@@ -37,14 +37,19 @@ preds = np.array([0.5, 0, .3])
 threshold = .4
 label = np.array([0, 1, 0])
 
-print(accuracy_function(label, preds, threshold))
+#print(accuracy_function(label, preds, threshold))
 
 
 
 f = h5py.File('test/Movie1_t00006_crop_gt.h5', 'r')
-train_labels = np.array(f['label'])
+test_labels = np.array(f['label'])
+f2 = h5py.File('test/Movie1_t00006_crop_gt.h5', 'r')
+test_labels2 = np.array(f['label'])
 
-print(train_labels[0, :, :].shape)
+print(test_labels.shape)
+print(test_labels2.shape)
 
-display([tf.reshape(train_labels[200, :, :], [620, 1330, 1])])
+print(np.append(test_labels, test_labels2, axis= 0).shape)
+
+display([tf.reshape(test_labels[200, :, :], [620, 1330, 1])])
 
