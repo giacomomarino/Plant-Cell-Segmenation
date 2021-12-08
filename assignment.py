@@ -11,23 +11,7 @@ import matplotlib.pyplot as plt
 from PIL import Image
 from tensorflow.keras.utils import *
 from tensorflow.keras.preprocessing.image import *
-from partitioning import partitioner
-
-
-def display(display_list):
-    #print('starting model proc')
-    plt.figure(figsize=(1330, 650))
-    plt.show()
-
-    title = ['Input Image', 'True Mask', 'Predicted Mask']
-
-    for i in range(len(display_list)):
-        plt.subplot(1, len(display_list), i + 1)
-        # plt.title(title[i])
-        plt.imshow(tf.keras.preprocessing.image.array_to_img(display_list[i]))
-        plt.axis('off')
-    
-    #print('showing model')
+from partitioning import partitioner, display
 
 
 def train(model, train_input, train_labels):
@@ -44,8 +28,9 @@ def train(model, train_input, train_labels):
             with tf.GradientTape() as tape:
                 print('running call')
                 logits = model.call(inputs)
+                #display([logits])
                 print('partitioning')
-                #logits = partitioner(logits)
+                logits = partitioner(logits)
                 # print("logits done for round", i, logits)
                 loss = model.loss_function(logits, labels)
             gradients = tape.gradient(loss, model.trainable_variables)

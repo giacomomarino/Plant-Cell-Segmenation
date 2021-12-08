@@ -41,7 +41,7 @@ class Segmentor(tf.keras.Model):
 
     @tf.function
     def call(self, inputs):
-        print('inputs in call', inputs)
+        #print('inputs in call', inputs)
         inputs = tf.expand_dims(inputs, 3)
         #print("inputs shape be", inputs.shape, inputs)
         down1 = self.conv_down1(inputs)
@@ -59,7 +59,7 @@ class Segmentor(tf.keras.Model):
         #print("up1 concat layer done!")
         up2 = self.conv_up2(up1_concat)
         #print("up2 layer done!", up2)
-
+        print('done call, returning')
         return up2
 
 
