@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 from PIL import Image
 from tensorflow.keras.utils import *
 from tensorflow.keras.preprocessing.image import *
-from partitioning import *
+from partitioning import partitioner
 
 
 def display(display_list):
@@ -32,19 +32,20 @@ def display(display_list):
 
 def train(model, train_input, train_labels):
 
-
     for j in range(len(train_input)):
         train_movie = train_input[j]
         train_label = train_labels[j]
         
         for i in tqdm(range(0, len(train_movie), model.batch_size)):
-            #print("starting train now in loop")
+            print("starting train now in loop")
             inputs = tf.cast(tf.constant(train_movie[i:i + model.batch_size]), dtype=tf.float32)
             labels = tf.cast(tf.constant(train_label[i:i + model.batch_size]), dtype=tf.float32)
 
             with tf.GradientTape() as tape:
-                #print('inputs', inputs)
+                print('running call')
                 logits = model.call(inputs)
+                print('partitioning')
+                #logits = partitioner(logits)
                 # print("logits done for round", i, logits)
                 loss = model.loss_function(logits, labels)
             gradients = tape.gradient(loss, model.trainable_variables)
@@ -101,7 +102,7 @@ def test(model, test_input, test_labels):
 
 def main():
     print("Running preprocessing...")
-    train_data, train_labels, test_data, test_labels = get_data(train_files[:5], train_files[5:7])
+    train_data, train_labels, test_data, test_labels = get_data(train_files[:2], test_files[0:2])
     print("Preprocessing complete.")
 
     model = Segmentor()

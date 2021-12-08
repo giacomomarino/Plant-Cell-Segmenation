@@ -41,7 +41,7 @@ class Segmentor(tf.keras.Model):
 
     @tf.function
     def call(self, inputs):
-        #print('inputs in call', inputs)
+        print('inputs in call', inputs)
         inputs = tf.expand_dims(inputs, 3)
         #print("inputs shape be", inputs.shape, inputs)
         down1 = self.conv_down1(inputs)

@@ -69,8 +69,8 @@ def partitioner(preds):
     
 
 d = tf.random.uniform(shape=[100,100])
-plt.imshow(d)
+#plt.imshow(d)
 #plt.show()
-print(d)
+#print(d)
 #display([tf.expand_dims(d,axis=2)])
-partitioner(d)
+#partitioner(d)

@@ -31,7 +31,6 @@ test_files = ['test/Movie1_t00006_crop_gt.h5',
 'test/Movie2_T00010_crop_gt.h5', 
 'test/Movie2_T00020_crop_gt.h5']
 
-
 def get_data(train_files: list, test_files: list):
 
     train_labels = []
@@ -53,10 +52,10 @@ def get_data(train_files: list, test_files: list):
         test_labels.append(label)
         test_data.append(norm_data)
 
-    print(' train_data shape', np.shape(train_data))
-    print(' train_labels shape', np.shape(train_labels))
-    print(' test_data shape', np.shape(test_data))
-    print(' test_labels shape', np.shape(test_labels))
+    #print(' train_data shape', np.shape(train_data))
+    #print(' train_labels shape', np.shape(train_labels))
+    #print(' test_data shape', np.shape(test_data))
+    #print(' test_labels shape', np.shape(test_labels))
 
     return train_data, train_labels, test_data, test_labels
 
