@@ -35,7 +35,7 @@ def train(model, train_input, train_labels):
                     parted.append(partitioner(logits[k]))
                 print(parted)
                 # print("logits done for round", i, logits)
-                loss = model.loss_function(logits, labels)
+                loss = model.loss_function(parted, labels)
             gradients = tape.gradient(loss, model.trainable_variables)
             model.optimizer.apply_gradients(zip(gradients, model.trainable_variables))
             #print("gimme display")
@@ -44,7 +44,7 @@ def train(model, train_input, train_labels):
             for i in range(logits.shape[0]):
                 logs.append(logits[i])
             # print('logs', logs)
-            display(logs)
+            #display(logs)
 
 
 def test(model, test_input, test_labels):

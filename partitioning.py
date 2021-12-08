@@ -61,11 +61,11 @@ def partitioner(preds):
     print("FF", filled_filtered)
 
     # And display!
-    f, (ax0, ax1, ax2) = plt.subplots(1, 3)
-    ax0.imshow(image, cmap='gray')
-    ax1.imshow(filled_filtered, cmap='Blues')
-    ax2.imshow(distance_map, cmap='gray')
-    plt.show()
+    #f, (ax0, ax1, ax2) = plt.subplots(1, 3)
+    #ax0.imshow(image, cmap='gray')
+    #ax1.imshow(filled_filtered, cmap='Blues')
+    #ax2.imshow(distance_map, cmap='gray')
+    #plt.show()
     return filled_filtered
 
 
