@@ -12,6 +12,7 @@ from PIL import Image
 from tensorflow.keras.utils import *
 from tensorflow.keras.preprocessing.image import *
 from partitioning import partitioner, display
+from labeltobound import ltb
 
 
 def train(model, train_input, train_labels):
@@ -22,14 +23,19 @@ def train(model, train_input, train_labels):
         
         for i in tqdm(range(0, len(train_movie), model.batch_size)):
             print("starting train now in loop")
+            #this is shit HD added to test the function to convert boundaries to labels
             inputs = tf.cast(tf.constant(train_movie[i:i + model.batch_size]), dtype=tf.float32)
             labels = tf.cast(tf.constant(train_label[i:i + model.batch_size]), dtype=tf.float32)
+            pre = tf.expand_dims(labels[0],2)
+            post = tf.expand_dims(np.squeeze(ltb(labels[0])),2)
+            #print(pre,post)
+            #display([pre,post])
 
             with tf.GradientTape() as tape:
                 print('running call')
-                logits = model.call(inputs)
-                loss = model.loss_function(logits, labels)
-                print('loss worked!')
+                logits = np.squeeze(model.call(inputs))
+                loss = model.loss_function(logits, np.squeeze(ltb(labels)))
+                print('loss worked!', loss)
             gradients = tape.gradient(loss, model.trainable_variables)
             model.optimizer.apply_gradients(zip(gradients, model.trainable_variables))
             #print("gimme display")
@@ -84,7 +90,7 @@ def test(model, test_input, test_labels):
 
 def main():
     print("Running preprocessing...")
-    train_data, train_labels, test_data, test_labels = get_data(train_files[:2], test_files[0:2])
+    train_data, train_labels, test_data, test_labels = get_data(train_files[0:2], test_files[:2])
     print("Preprocessing complete.")
 
     model = Segmentor()
