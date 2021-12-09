@@ -30,11 +30,12 @@ def train(model, train_input, train_labels):
             post = tf.expand_dims(np.squeeze(ltb(labels[0])),2)
             #print(pre,post)
             #display([pre,post])
+            labels = ltb(labels)
 
             with tf.GradientTape() as tape:
                 print('running call')
                 logits = np.squeeze(model.call(inputs))
-                loss = model.loss_function(logits, np.squeeze(ltb(labels)))
+                loss = model.loss_function(logits, np.squeeze(labels))
                 print('loss worked!', loss)
             gradients = tape.gradient(loss, model.trainable_variables)
             model.optimizer.apply_gradients(zip(gradients, model.trainable_variables))
