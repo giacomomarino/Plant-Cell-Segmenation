@@ -58,7 +58,7 @@ class Segmentor(tf.keras.Model):
         up1_concat = concatenate([down1, up1], axis=3)
         #print("up1 concat layer done!")
         up2 = self.conv_up2(up1_concat)
-        print("up2 layer done!", up2)
+        #print("up2 layer done!", up2)
 
         '''
         parted =[]
