@@ -21,9 +21,9 @@ def train(model, train_input, train_labels):
         train_movie = train_input[j]
         train_label = train_labels[j]
         
-        for i in (range(10)):#0, len(train_movie), model.batch_size)):
+        for i in (range(0, len(train_movie), model.batch_size)):
             #print("starting train now in loop")
-            #this is what HD added to test the function to convert boundaries to labels
+            #this is shit HD added to test the function to convert boundaries to labels
             inputs = tf.cast(tf.constant(train_movie[i:i + model.batch_size]), dtype=tf.float32)
             labels = tf.cast(tf.constant(train_label[i:i + model.batch_size]), dtype=tf.float32)
             #pre = tf.expand_dims(labels[0],2)
@@ -90,7 +90,7 @@ def test(model, test_input, test_labels):
 
             for i in range(logits.shape[0]):
                 #logs.append(logits[i])
-                accs.append(model.accuracy_function(labels[i], logits[i], .65))
+                accs.append(model.accuracy_function(ltb(labels[i]), logits[i], .40))
                 #display([labels[i], logits[i]])
             # calculate accuracy
         #print("here da logs", len(logs), logs[0], logs)
@@ -101,7 +101,7 @@ def test(model, test_input, test_labels):
 
 def main():
     print("Running preprocessing...")
-    train_data, train_labels, test_data, test_labels = get_data(train_files[:2], test_files[:2])
+    train_data, train_labels, test_data, test_labels = get_data(train_files[0:2], [test_files[1]])
     print("Preprocessing complete.")
 
     model = Segmentor()
@@ -113,8 +113,7 @@ def main():
     loss, accs, logits = test(model, test_data, test_labels)
     display([logits[0]])
     print("SEGMENTOR HAS SEGMENTORED: Loss: ", loss)
-    print("Accuracy: ")
-    print(tf.reduce_mean(accs))
+    print("Accuracy: ", tf.reduce_mean(accs))
 
 
 if __name__ == '__main__':

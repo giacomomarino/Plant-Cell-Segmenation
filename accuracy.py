@@ -1,7 +1,7 @@
 import tensorflow as tf
 import numpy as np
 import h5py
-from assignment import display, train
+#from assignment import display, train
 
 def accuracy_function(label, pred, threshold):
 
@@ -41,15 +41,10 @@ label = np.array([0, 1, 0])
 
 
 
-f = h5py.File('test/Movie1_t00006_crop_gt.h5', 'r')
-test_labels = np.array(f['label'])
+f = h5py.File('val/Movie1_t00004_crop_gt.h5', 'r')
+test_labels = f['label']
 f2 = h5py.File('test/Movie1_t00006_crop_gt.h5', 'r')
 test_labels2 = np.array(f['label'])
 
-print(test_labels.shape)
-print(test_labels2.shape)
-
-print(np.append(test_labels, test_labels2, axis= 0).shape)
-
-display([tf.reshape(test_labels[200, :, :], [620, 1330, 1])])
+print(f.keys())
 

@@ -84,7 +84,7 @@ class Segmentor(tf.keras.Model):
 
         # binarize predictions
 
-        binarized = tf.math.greater_than(pred, thresh)
+        binarized = tf.math.greater(pred, thresh)
 
         # Measure accuraced
         correct = tf.equal(binarized, tf.cast(label, dtype=tf.dtypes.bool))
