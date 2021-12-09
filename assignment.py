@@ -30,15 +30,15 @@ def train(model, train_input, train_labels):
             #post = tf.expand_dims(np.squeeze(ltb(labels[0])),2)
             #print(pre,post)
             #display([pre,post])
-            print(labels)
-            disp = tf.expand_dims(labels[0], 2)
-            display([disp])
+            #print(labels)
+            #disp = tf.expand_dims(labels[0], 2)
+            #display([disp])
             labels = tf.stop_gradient(ltb(labels))
-            disp1 = tf.squeeze(labels)
-            print(disp1)
-            disp1 = tf.expand_dims(disp1[0], 2)
-            print(disp1)
-            display([disp1])
+            #disp1 = tf.squeeze(labels)
+            #print(disp1)
+            #disp1 = tf.expand_dims(disp1[0], 2)
+            #print(disp1)
+            #display([disp1])
             with tf.GradientTape() as tape:
                 #print('running call')
                 logits = tf.squeeze(model.call(inputs))
@@ -79,18 +79,20 @@ def test(model, test_input, test_labels):
         
             #display(inps)
             labels = tf.cast(tf.constant(test_label[i:i + model.batch_size]), dtype=tf.float32)
-            labels = tf.stop_gradient(ltb(labels))
 
             if inputs.shape[0] != labels.shape[0]:
                 print("batch misalignment skipping")
                 break
 
-            logits = model.call(inputs)
+            labels = tf.stop_gradient(ltb(labels))
+
+            logits = tf.squeeze(model.call(inputs))
+            labels = tf.squeeze(labels)
             losses += model.loss_function(logits, labels)
 
             for i in range(logits.shape[0]):
                 #logs.append(logits[i])
-                accs.append(model.accuracy_function(ltb(labels[i]), logits[i], .40))
+                accs.append(model.accuracy_function(labels[i], logits[i], .7))
                 #display([labels[i], logits[i]])
             # calculate accuracy
         #print("here da logs", len(logs), logs[0], logs)
@@ -111,7 +113,7 @@ def main():
     train(model, train_data, train_labels)
     print("Testing")
     loss, accs, logits = test(model, test_data, test_labels)
-    display([logits[0]])
+    display([tf.expand_dims(logits[0], 2)])
     print("SEGMENTOR HAS SEGMENTORED: Loss: ", loss)
     print("Accuracy: ", tf.reduce_mean(accs))
 

@@ -100,7 +100,7 @@ class Segmentor(tf.keras.Model):
         
     @tf.function
     def loss_function(self, logits, labels):
-        bce = tf.keras.losses.BinaryCrossentropy(from_logits=True)
+        bce = tf.keras.losses.BinaryCrossentropy(from_logits=False)
         #print("loss layer inited")
         loss = bce(labels, logits)
 
