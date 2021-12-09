@@ -79,6 +79,10 @@ def test(model, test_input, test_labels):
         
             #display(inps)
             labels = tf.cast(tf.constant(test_label[i:i + model.batch_size]), dtype=tf.float32)
+<<<<<<< HEAD
+=======
+            
+>>>>>>> 4311af054dae53aef0493d7cecd925ac2fd79355
 
             if inputs.shape[0] != labels.shape[0]:
                 print("batch misalignment skipping")
@@ -86,13 +90,22 @@ def test(model, test_input, test_labels):
 
             labels = tf.stop_gradient(ltb(labels))
 
+<<<<<<< HEAD
             logits = tf.squeeze(model.call(inputs))
+=======
+            logits = model.call(inputs)
+            logits = tf.squeeze(logits)
+>>>>>>> 4311af054dae53aef0493d7cecd925ac2fd79355
             labels = tf.squeeze(labels)
             losses += model.loss_function(logits, labels)
 
             for i in range(logits.shape[0]):
                 #logs.append(logits[i])
+<<<<<<< HEAD
                 accs.append(model.accuracy_function(labels[i], logits[i], .7))
+=======
+                accs.append(model.accuracy_function(labels[i], logits[i], .40))
+>>>>>>> 4311af054dae53aef0493d7cecd925ac2fd79355
                 #display([labels[i], logits[i]])
             # calculate accuracy
         #print("here da logs", len(logs), logs[0], logs)
