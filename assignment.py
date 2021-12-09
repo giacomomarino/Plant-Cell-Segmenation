@@ -72,7 +72,7 @@ def train(model, train_input, train_labels):
                 #print('running call')
                 logits = tf.squeeze(model.call(inputs))
                 loss = model.loss_function(logits, tf.squeeze(labels))
-                print('loss worked!', loss)
+                #print('loss worked!', loss)
             gradients = tape.gradient(loss, model.trainable_variables)
             model.optimizer.apply_gradients(zip(gradients, model.trainable_variables))
             #print("gimme display")

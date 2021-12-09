@@ -2,7 +2,6 @@ import tensorflow as tf
 from tensorflow.keras.models import *
 from tensorflow.keras.layers import *
 from tensorflow.keras.optimizers import *
-from partitioning import *
 
 
 
@@ -11,7 +10,7 @@ class Segmentor(tf.keras.Model):
         super(Segmentor, self).__init__()
         # hyperparams
         self.batch_size = 8
-        self.alpha = 0.0002
+        self.alpha = 0.001
         self.optimizer = Adam(learning_rate=self.alpha)
         self.hd = 16
 
