@@ -84,7 +84,7 @@ class Segmentor(tf.keras.Model):
 
         # binarize predictions
 
-        binarized = tf.math.less_equal(pred, thresh)
+        binarized = tf.math.greater_than(pred, thresh)
 
         # Measure accuraced
         correct = tf.equal(binarized, tf.cast(label, dtype=tf.dtypes.bool))
@@ -100,7 +100,7 @@ class Segmentor(tf.keras.Model):
         
     @tf.function
     def loss_function(self, logits, labels):
-        bce = tf.keras.losses.CategoricalCrossentropy(from_logits=True)
+        bce = tf.keras.losses.BinaryCrossentropy(from_logits=True)
         #print("loss layer inited")
         loss = bce(labels, logits)
 

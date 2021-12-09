@@ -21,27 +21,36 @@ def train(model, train_input, train_labels):
         train_movie = train_input[j]
         train_label = train_labels[j]
         
-        for i in (range(0, len(train_movie), model.batch_size)):
-            print("starting train now in loop")
-            #this is shit HD added to test the function to convert boundaries to labels
+        for i in (range(10)):#0, len(train_movie), model.batch_size)):
+            #print("starting train now in loop")
+            #this is what HD added to test the function to convert boundaries to labels
             inputs = tf.cast(tf.constant(train_movie[i:i + model.batch_size]), dtype=tf.float32)
             labels = tf.cast(tf.constant(train_label[i:i + model.batch_size]), dtype=tf.float32)
-            pre = tf.expand_dims(labels[0],2)
-            post = tf.expand_dims(np.squeeze(ltb(labels[0])),2)
+            #pre = tf.expand_dims(labels[0],2)
+            #post = tf.expand_dims(np.squeeze(ltb(labels[0])),2)
             #print(pre,post)
             #display([pre,post])
+            print(labels)
+            disp = tf.expand_dims(labels[0], 2)
+            display([disp])
             labels = tf.stop_gradient(ltb(labels))
-
+            disp1 = tf.squeeze(labels)
+            print(disp1)
+            disp1 = tf.expand_dims(disp1[0], 2)
+            print(disp1)
+            display([disp1])
             with tf.GradientTape() as tape:
                 #print('running call')
                 logits = tf.squeeze(model.call(inputs))
                 loss = model.loss_function(logits, tf.squeeze(labels))
-                #print('loss worked!', loss)
+                print('loss worked!', loss)
             gradients = tape.gradient(loss, model.trainable_variables)
             model.optimizer.apply_gradients(zip(gradients, model.trainable_variables))
             #print("gimme display")
             # print(logits)
             logs = []
+            #if j % 100 == 0:
+            #    display(tf.expand_dims(logits,3))
             for i in range(logits.shape[0]):
                 logs.append(logits[i])
             # print('logs', logs)
@@ -70,7 +79,8 @@ def test(model, test_input, test_labels):
         
             #display(inps)
             labels = tf.cast(tf.constant(test_label[i:i + model.batch_size]), dtype=tf.float32)
-            
+            labels = tf.stop_gradient(ltb(labels))
+
             if inputs.shape[0] != labels.shape[0]:
                 print("batch misalignment skipping")
                 break
@@ -91,7 +101,7 @@ def test(model, test_input, test_labels):
 
 def main():
     print("Running preprocessing...")
-    train_data, train_labels, test_data, test_labels = get_data(train_files[0:1], test_files[0:1])
+    train_data, train_labels, test_data, test_labels = get_data(train_files[:2], test_files[:2])
     print("Preprocessing complete.")
 
     model = Segmentor()
