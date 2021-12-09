@@ -30,7 +30,7 @@ def train(model, train_input, train_labels):
             post = tf.expand_dims(np.squeeze(ltb(labels[0])),2)
             #print(pre,post)
             #display([pre,post])
-            labels = ltb(labels)
+            labels = tf.stop_gradient(ltb(labels))
 
             with tf.GradientTape() as tape:
                 print('running call')
