@@ -68,7 +68,8 @@ class Segmentor(tf.keras.Model):
             parted.append(part)
         #print(parted)
         preds = tf.concat(parted,0)
-        print('done call, returning')'''
+        print('done call, returning')
+        '''
         return up2
 
 
@@ -99,7 +100,7 @@ class Segmentor(tf.keras.Model):
         
     @tf.function
     def loss_function(self, logits, labels):
-        bce = tf.keras.losses.BinaryCrossentropy()
+        bce = tf.keras.losses.CategoricalCrossentropy()
         #print("loss layer inited")
         loss = bce(labels, logits)
 

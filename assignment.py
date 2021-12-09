@@ -27,8 +27,8 @@ def train(model, train_input, train_labels):
 
             with tf.GradientTape() as tape:
                 print('running call')
-                preds = model.call(inputs)
-                loss = model.loss_function(preds, labels)
+                logits = model.call(inputs)
+                loss = model.loss_function(logits, labels)
                 print('loss worked!')
             gradients = tape.gradient(loss, model.trainable_variables)
             model.optimizer.apply_gradients(zip(gradients, model.trainable_variables))
