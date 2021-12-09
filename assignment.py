@@ -17,11 +17,11 @@ from labeltobound import ltb
 
 def train(model, train_input, train_labels):
 
-    for j in range(len(train_input)):
+    for j in tqdm(range(len(train_input))):
         train_movie = train_input[j]
         train_label = train_labels[j]
         
-        for i in tqdm(range(0, len(train_movie), model.batch_size)):
+        for i in (range(0, len(train_movie), model.batch_size)):
             print("starting train now in loop")
             #this is shit HD added to test the function to convert boundaries to labels
             inputs = tf.cast(tf.constant(train_movie[i:i + model.batch_size]), dtype=tf.float32)
@@ -33,10 +33,10 @@ def train(model, train_input, train_labels):
             labels = tf.stop_gradient(ltb(labels))
 
             with tf.GradientTape() as tape:
-                print('running call')
+                #print('running call')
                 logits = tf.squeeze(model.call(inputs))
                 loss = model.loss_function(logits, tf.squeeze(labels))
-                print('loss worked!', loss)
+                #print('loss worked!', loss)
             gradients = tape.gradient(loss, model.trainable_variables)
             model.optimizer.apply_gradients(zip(gradients, model.trainable_variables))
             #print("gimme display")
@@ -79,19 +79,19 @@ def test(model, test_input, test_labels):
             losses += model.loss_function(logits, labels)
 
             for i in range(logits.shape[0]):
-                logs.append(logits[i])
+                #logs.append(logits[i])
                 accs.append(model.accuracy_function(labels[i], logits[i], .65))
-                display([labels[i], logits[i]])
+                #display([labels[i], logits[i]])
             # calculate accuracy
         #print("here da logs", len(logs), logs[0], logs)
 
         # currently returns total losses
-    return losses, accs
+    return losses, accs, logits
 
 
 def main():
     print("Running preprocessing...")
-    train_data, train_labels, test_data, test_labels = get_data(train_files[0:2], test_files[:2])
+    train_data, train_labels, test_data, test_labels = get_data(train_files[0:1], test_files[0:1])
     print("Preprocessing complete.")
 
     model = Segmentor()
@@ -100,9 +100,11 @@ def main():
     print("Training")
     train(model, train_data, train_labels)
     print("Testing")
-    loss, accs = test(model, test_data, test_labels)
+    loss, accs, logits = test(model, test_data, test_labels)
+    display([logits[0]])
     print("SEGMENTOR HAS SEGMENTORED: Loss: ", loss)
-    print("Accuracy: " + tf.reduce_mean(accs))
+    print("Accuracy: ")
+    print(tf.reduce_mean(accs))
 
 
 if __name__ == '__main__':
