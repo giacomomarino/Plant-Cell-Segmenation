@@ -1,2 +1,2 @@
 # Plant-Cell-Segmenation
-A deep learning framework for segmenting plant cells.
+A deep learning framework for 2d plant cell segmenation. This model was delevoped based off the work of Wolny et. al’s paper “Accurate and versatile 3D segmentation of plant tissues at cellular resolution.” The model archetecture exists in segmentor.py and the training and testing as well as visualaztion functions exist in assignment.py. Data is avaliable at https://osf.io/uzq3w and the specfic sets that were used in preprocessing and testing were the LateralRootPrimordia images in the test and train folders. With only a small set of these images a 97% accuracy was achieved. There are currently no known bugs in this implementation.
